@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>1440BLACKHOLE — Coming Soon</title>
+  <meta name="description" content="Track where your day disappears. 1440 minutes. Make them count. Coming soon." />
+  <meta name="theme-color" content="#0b0f14" />
+  <meta name="color-scheme" content="dark" />
+  <meta property="og:title" content="1440BLACKHOLE — Coming Soon" />
+  <meta property="og:description" content="Track where your day disappears. 1440 minutes. Make them count." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://1440blackhole.com" />
+  <meta property="og:image" content="/og.png" />
+  <style>
+    :root{
+      --bg:#0b0f14; --bg2:#0f1520; --ink:#e8eef7; --muted:#9aa7b6;
+      --line:rgba(255,255,255,0.08); --accent:#66d9ef; --accent2:#a6e22e;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+         color:var(--ink); background:radial-gradient(1200px 800px at 20% -10%, #12202f 0%, var(--bg) 60%);}
+    .wrap{min-height:100%; display:grid; grid-template-rows:auto 1fr auto}
+    header, main, footer{padding:20px}
+    header{display:flex; align-items:center; justify-content:space-between; gap:16px}
+    .mark{font-weight:800; letter-spacing:.2em; text-transform:uppercase; font-size:12px; color:var(--muted);}
+    .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--accent); margin-left:8px}
+    .nh{opacity:.5; font-size:12px}
+
+    .hero{max-width:980px; margin:56px auto 0; padding:0 10px;}
+    h1{font-size:clamp(28px,4.2vw,56px); line-height:1.05; margin:0 0 14px 0; font-weight:900; letter-spacing:.2px}
+    .sub{color:var(--muted); font-size:clamp(14px,1.6vw,18px); max-width:720px}
+
+    .panel{margin:28px auto 0; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+           border:1px solid var(--line); border-radius:14px; padding:14px; max-width:720px}
+    .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
+    .field{flex:1 1 240px; display:flex; gap:8px}
+    input[type=email]{flex:1; background:#0d1420; color:var(--ink); border:1px solid var(--line); border-radius:12px; padding:12px 14px; outline:none}
+    button{background:#172232; color:var(--ink); border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer}
+    button:hover{transform:translateY(-1px)}
+
+    .meter{--r:46; position:relative; width:140px; aspect-ratio:1/1;}
+    .meter svg{position:absolute; inset:0; width:100%; height:100%}
+    .meter .num{position:absolute; inset:0; display:grid; place-items:center; font-weight:800}
+    .tiny{font-size:12px; color:var(--muted)}
+
+    .grid{display:grid; grid-template-columns:1fr auto; gap:18px; align-items:center}
+    @media (max-width:720px){ .grid{grid-template-columns:1fr} .meter{margin-top:8px} }
+
+    footer{border-top:1px solid var(--line); color:var(--muted); font-size:12px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
+    a{color:var(--accent); text-decoration:none}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="mark">1440BLACKHOLE<span class="dot" aria-hidden="true"></span></div>
+      <div class="nh">Make every minute count</div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1>Where did your day go?</h1>
+        <p class="sub">Track the minutes that disappear into arguments, doomscrolling, and unproductive spirals. A gentle mirror for your time and attention. <strong>iOS app launching soon.</strong></p>
+
+        <div class="panel grid" role="region" aria-label="notify">
+          <div>
+            <div class="row">
+              <div class="field">
+                <label class="sr" for="email" aria-hidden="true"></label>
+                <input id="email" type="email" placeholder="your@email.com" autocomplete="email" />
+                <button id="notifyBtn">Notify me</button>
+              </div>
+            </div>
+            <div class="tiny" id="note">No spam. We’ll email only when TestFlight is ready.</div>
+          </div>
+          <div class="meter" aria-hidden="true">
+            <svg viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#66d9ef"/>
+                  <stop offset="1" stop-color="#a6e22e"/>
+                </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8" />
+              <circle id="ring" cx="50" cy="50" r="46" fill="none" stroke="url(#g1)" stroke-width="8" stroke-linecap="round" transform="rotate(-90 50 50)" stroke-dasharray="289" stroke-dashoffset="0" />
+            </svg>
+            <div class="num"><span id="mins">1440</span></div>
+          </div>
+        </div>
+
+        <p class="tiny" style="margin-top:10px">Tip: Add <code>hello@1440blackhole.com</code> to contacts so we don’t land in spam.</p>
+      </section>
+    </main>
+
+    <footer>
+      <div>© <span id="yr"></span> 1440BLACKHOLE</div>
+      <div>
+        <a href="mailto:hello@1440blackhole.com">Contact</a>
+        <span aria-hidden="true"> · </span>
+        <a href="#" id="privacy">Privacy</a>
+      </div>
+    </footer>
+  </div>
+
+<script>
+  // Minimal JS: live 1440 ring + ultra-light email capture (local only)
+  const CIRCUM = 2*Math.PI*46; // r=46 -> ~289
+  const ring = document.getElementById('ring');
+  const minsEl = document.getElementById('mins');
+  const yr = document.getElementById('yr'); yr.textContent = new Date().getFullYear();
+
+  function tick(){
+    const now = new Date();
+    const midnight = new Date(now); midnight.setHours(0,0,0,0);
+    const passed = Math.floor((now - midnight)/60000);
+    const left = Math.max(0, 1440 - passed);
+    minsEl.textContent = left;
+    const frac = left/1440; // 0..1
+    ring.setAttribute('stroke-dasharray', CIRCUM.toFixed(0));
+    ring.setAttribute('stroke-dashoffset', ((1-frac)*CIRCUM).toFixed(0));
+  }
+  setInterval(tick, 1000); tick();
+
+  // Email capture: stores locally and opens mailto prefilled. Replace with real endpoint later.
+  const btn = document.getElementById('notifyBtn');
+  btn.addEventListener('click', () => {
+    const el = document.getElementById('email');
+    const v = (el.value||'').trim();
+    if(!v || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){
+      el.focus(); el.style.borderColor = '#ff6188'; return;
+    }
+    try{
+      const key = '1440_waitlist';
+      const arr = JSON.parse(localStorage.getItem(key) || '[]');
+      if(!arr.includes(v)) arr.push(v);
+      localStorage.setItem(key, JSON.stringify(arr));
+    }catch{}
+    // Prefill mailto as a temporary backend-free flow
+    const subject = encodeURIComponent('Waitlist — 1440BLACKHOLE');
+    const body = encodeURIComponent('Please add me to the TestFlight waitlist.\n\nEmail: '+v+'\n\n(If you already captured this in localStorage, feel free to ignore.)');
+    window.location.href = `mailto:hello@1440blackhole.com?subject=${subject}&body=${body}`;
+    document.getElementById('note').textContent = 'Thanks! Your email draft is open — hit send to join the waitlist.';
+  });
+
+  // Inline privacy modal placeholder
+  document.getElementById('privacy').addEventListener('click', (e)=>{
+    e.preventDefault(); alert('Privacy: This preview stores your email locally (in your browser) and opens a prefilled email to hello@1440blackhole.com. No analytics or trackers on this page.');
+  });
+</script>
+</body>
+</html>

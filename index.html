@@ -4,150 +4,377 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>1440BLACKHOLE — Coming Soon</title>
-  <meta name="description" content="Track where your day disappears. 1440 minutes. Make them count. Coming soon." />
   <meta name="theme-color" content="#0b0f14" />
   <meta name="color-scheme" content="dark" />
-  <meta property="og:title" content="1440BLACKHOLE — Coming Soon" />
-  <meta property="og:description" content="Track where your day disappears. 1440 minutes. Make them count." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://1440blackhole.com" />
-  <meta property="og:image" content="/og.png" />
   <style>
     :root{
-      --bg:#0b0f14; --bg2:#0f1520; --ink:#e8eef7; --muted:#9aa7b6;
-      --line:rgba(255,255,255,0.08); --accent:#66d9ef; --accent2:#a6e22e;
+      --bg:#0b0f14; --ink:#e8eef7; --muted:#9aa7b6;
+      --accent:#66d9ef; --accent2:#a6e22e; --line:rgba(255,255,255,0.08);
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-         color:var(--ink); background:radial-gradient(1200px 800px at 20% -10%, #12202f 0%, var(--bg) 60%);}
-    .wrap{min-height:100%; display:grid; grid-template-rows:auto 1fr auto}
-    header, main, footer{padding:20px}
-    header{display:flex; align-items:center; justify-content:space-between; gap:16px}
-    .mark{font-weight:800; letter-spacing:.2em; text-transform:uppercase; font-size:12px; color:var(--muted);}
-    .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--accent); margin-left:8px}
-    .nh{opacity:.5; font-size:12px}
+    body{
+      margin:0;background:radial-gradient(1200px 800px at 20% -10%,#12202f 0%,var(--bg) 60%);
+      color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      min-height:100vh;text-align:center;padding:20px;position:relative;overflow:auto;
+    }
 
-    .hero{max-width:980px; margin:56px auto 0; padding:0 10px;}
-    h1{font-size:clamp(28px,4.2vw,56px); line-height:1.05; margin:0 0 14px 0; font-weight:900; letter-spacing:.2px}
-    .sub{color:var(--muted); font-size:clamp(14px,1.6vw,18px); max-width:720px}
+    /* Top utility nav (NN/g) */
+    header.topbar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:10px 18px;z-index:5;background:rgba(0,0,0,.2);backdrop-filter:blur(8px)}
+    .brand{font-weight:800;letter-spacing:.1em;text-transform:uppercase;font-size:12px;color:var(--muted);text-decoration:none}
+    nav.utilnav{display:flex;gap:18px;align-items:center}
+    nav.utilnav a{color:var(--ink);font-size:13px;opacity:.85;text-decoration:none}
+    nav.utilnav a:hover{text-decoration:underline;opacity:1}
+    .iconbtn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:10px;padding:6px 10px;background:#0f1520;color:var(--ink);text-decoration:none;font-size:13px}
 
-    .panel{margin:28px auto 0; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
-           border:1px solid var(--line); border-radius:14px; padding:14px; max-width:720px}
-    .row{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
-    .field{flex:1 1 240px; display:flex; gap:8px}
-    input[type=email]{flex:1; background:#0d1420; color:var(--ink); border:1px solid var(--line); border-radius:12px; padding:12px 14px; outline:none}
-    button{background:#172232; color:var(--ink); border:1px solid var(--line); border-radius:12px; padding:12px 16px; font-weight:700; cursor:pointer}
-    button:hover{transform:translateY(-1px)}
+    /* Hero */
+    h1{font-size:clamp(28px,4.2vw,52px);margin-top:70px;margin-bottom:10px;font-weight:900;letter-spacing:.3px}
+    p{color:var(--muted);max-width:600px;margin:0 auto 30px;line-height:1.5}
 
-    .meter{--r:46; position:relative; width:140px; aspect-ratio:1/1;}
+    /* Snapshot & bars */
+    .snapshot{width:100%;max-width:520px;display:grid;gap:14px;margin-top:30px;position:relative;z-index:2}
+    .row{display:flex;align-items:center;gap:12px;justify-content:space-between}
+    .icon svg{width:18px;height:18px;stroke:var(--accent);opacity:.9}
+    .bar{flex:1;height:10px;border-radius:999px;background:rgba(255,255,255,.06);position:relative;overflow:hidden;border:1px solid var(--line)}
+    .fill{position:absolute;left:0;top:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent),var(--accent2));box-shadow:0 0 14px rgba(102,217,239,.25);width:0%;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+    .mins{font-size:13px;color:var(--muted);min-width:120px;text-align:right}
+
+    /* Background dotted ring */
+    .ring-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:0;opacity:.07}
+    .ring-bg svg{width:min(90vw,700px);height:auto}
+    .ring-bg .spin{animation:spin 80s linear infinite; transform-origin:50% 50%}
+    .ring-bg .pulse{animation:pulse 6s ease-in-out infinite; transform-origin:50% 50%}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+
+    /* Live 1440 ring */
+    .meter{--r:46; position:relative; width:160px; aspect-ratio:1/1; margin:40px auto 10px}
     .meter svg{position:absolute; inset:0; width:100%; height:100%}
-    .meter .num{position:absolute; inset:0; display:grid; place-items:center; font-weight:800}
-    .tiny{font-size:12px; color:var(--muted)}
+    .meter .num{position:absolute; inset:0; display:grid; place-items:center; font-weight:900; font-size:28px}
+    .meter .sub{position:absolute; left:0; right:0; bottom:-18px; text-align:center; font-size:12px; color:var(--muted)}
 
-    .grid{display:grid; grid-template-columns:1fr auto; gap:18px; align-items:center}
-    @media (max-width:720px){ .grid{grid-template-columns:1fr} .meter{margin-top:8px} }
+    /* Panels */
+    .panel{max-width:520px;margin:20px auto;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:14px;padding:12px;z-index:2;position:relative}
+    .notify{display:flex;gap:8px;align-items:center}
+    .notify input{flex:1;background:#0d1420;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px 14px;outline:none}
+    .notify button{background:#172232;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
+    .tiny{font-size:12px;color:var(--muted);margin-top:6px;text-align:left}
 
-    footer{border-top:1px solid var(--line); color:var(--muted); font-size:12px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap}
-    a{color:var(--accent); text-decoration:none}
+    /* Footer utility links */
+    footer{position:fixed;right:18px;bottom:12px;z-index:5}
+    .footnav{display:flex;gap:14px}
+    .footnav a{color:var(--ink);font-size:13px;text-decoration:none;opacity:.85}
+    .footnav a:hover{text-decoration:underline;opacity:1}
+
+    /* Settings modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:10;padding:20px}
+    .modal[open]{display:flex}
+    .sheet{width:100%;max-width:520px;background:#0f1520;border:1px solid var(--line);border-radius:16px;padding:16px}
+    .sheet h3{margin:0 0 10px 0;font-size:16px}
+    .grid2{display:grid;grid-template-columns:1fr 110px;gap:10px}
+    .sheet input[type=number], .sheet input[type=text]{width:100%;background:#0d1420;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px}
+    .actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+    .btn{background:#172232;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer}
   </style>
 </head>
-<body>
-  <div class="wrap">
-    <header>
-      <div class="mark">1440BLACKHOLE<span class="dot" aria-hidden="true"></span></div>
-      <div class="nh">Make every minute count</div>
-    </header>
+<body id="top">
+  <header class="topbar" role="banner">
+    <a class="brand" href="#top" aria-label="1440BLACKHOLE home">1440BLACKHOLE</a>
+    <nav class="utilnav" aria-label="Utility">
+      <a href="#notify">Notify me</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#about">About</a>
+      <a href="#" id="openSettings" class="iconbtn"><i data-lucide="settings"></i><span>Settings</span></a>
+    </nav>
+  </header>
 
-    <main>
-      <section class="hero">
-        <h1>Where did your day go?</h1>
-        <p class="sub">Track the minutes that disappear into arguments, doomscrolling, and unproductive spirals. A gentle mirror for your time and attention. <strong>iOS app launching soon.</strong></p>
-
-        <div class="panel grid" role="region" aria-label="notify">
-          <div>
-            <div class="row">
-              <div class="field">
-                <label class="sr" for="email" aria-hidden="true"></label>
-                <input id="email" type="email" placeholder="your@email.com" autocomplete="email" />
-                <button id="notifyBtn">Notify me</button>
-              </div>
-            </div>
-            <div class="tiny" id="note">No spam. We’ll email only when TestFlight is ready.</div>
-          </div>
-          <div class="meter" aria-hidden="true">
-            <svg viewBox="0 0 100 100">
-              <defs>
-                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#66d9ef"/>
-                  <stop offset="1" stop-color="#a6e22e"/>
-                </linearGradient>
-              </defs>
-              <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8" />
-              <circle id="ring" cx="50" cy="50" r="46" fill="none" stroke="url(#g1)" stroke-width="8" stroke-linecap="round" transform="rotate(-90 50 50)" stroke-dasharray="289" stroke-dashoffset="0" />
-            </svg>
-            <div class="num"><span id="mins">1440</span></div>
-          </div>
-        </div>
-
-        <p class="tiny" style="margin-top:10px">Tip: Add <code>hello@1440blackhole.com</code> to contacts so we don’t land in spam.</p>
-      </section>
-    </main>
-
-    <footer>
-      <div>© <span id="yr"></span> 1440BLACKHOLE</div>
-      <div>
-        <a href="mailto:hello@1440blackhole.com">Contact</a>
-        <span aria-hidden="true"> · </span>
-        <a href="#" id="privacy">Privacy</a>
-      </div>
-    </footer>
+  <div class="ring-bg" aria-hidden="true">
+    <svg viewBox="0 0 100 100">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#66d9ef"/>
+          <stop offset="1" stop-color="#a6e22e"/>
+        </linearGradient>
+      </defs>
+      <g class="pulse">
+        <g class="spin">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="url(#g1)" stroke-width="1.8" stroke-dasharray="2 8"/>
+          <circle cx="50" cy="50" r="36" fill="none" stroke="url(#g1)" stroke-width="1.4" stroke-dasharray="1 12"/>
+        </g>
+      </g>
+    </svg>
   </div>
 
-<script>
-  // Minimal JS: live 1440 ring + ultra-light email capture (local only)
-  const CIRCUM = 2*Math.PI*46; // r=46 -> ~289
-  const ring = document.getElementById('ring');
-  const minsEl = document.getElementById('mins');
-  const yr = document.getElementById('yr'); yr.textContent = new Date().getFullYear();
+  <main>
+    <h1>1440BLACKHOLE</h1>
+    <p>Track where your day disappears. A calm reflection on the 1440 minutes we all share — and the ones that slip away. iOS app launching soon.</p>
 
-  function tick(){
-    const now = new Date();
-    const midnight = new Date(now); midnight.setHours(0,0,0,0);
-    const passed = Math.floor((now - midnight)/60000);
-    const left = Math.max(0, 1440 - passed);
-    minsEl.textContent = left;
-    const frac = left/1440; // 0..1
-    ring.setAttribute('stroke-dasharray', CIRCUM.toFixed(0));
-    ring.setAttribute('stroke-dashoffset', ((1-frac)*CIRCUM).toFixed(0));
-  }
-  setInterval(tick, 1000); tick();
+    <!-- Live 1440 ring -->
+    <div class="meter" aria-label="minutes left today">
+      <svg viewBox="0 0 100 100" aria-hidden="true">
+        <defs>
+          <linearGradient id="gMeter" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#66d9ef"/>
+            <stop offset="1" stop-color="#a6e22e"/>
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="8" />
+        <circle id="meterRing" cx="50" cy="50" r="46" fill="none" stroke="url(#gMeter)" stroke-width="8" stroke-linecap="round" transform="rotate(-90 50 50)" stroke-dasharray="289" stroke-dashoffset="289" />
+      </svg>
+      <div class="num"><span id="meterMins">1440</span></div>
+      <div class="sub">minutes left today</div>
+    </div>
 
-  // Email capture: stores locally and opens mailto prefilled. Replace with real endpoint later.
-  const btn = document.getElementById('notifyBtn');
-  btn.addEventListener('click', () => {
-    const el = document.getElementById('email');
-    const v = (el.value||'').trim();
-    if(!v || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){
-      el.focus(); el.style.borderColor = '#ff6188'; return;
+    <!-- Snapshot (first row = Active minutes left, aligned) -->
+    <div class="snapshot" id="snapshot"></div>
+
+    <!-- Waitlist -->
+    <div class="panel" id="notify" role="region" aria-label="waitlist">
+      <div class="notify">
+        <input id="email" type="email" placeholder="your@email.com" autocomplete="email" />
+        <button id="notifyBtn">Notify me</button>
+      </div>
+      <div class="tiny" id="note">No spam. We’ll email when TestFlight is ready.</div>
+    </div>
+
+    <!-- Privacy -->
+    <div class="panel" id="privacy" role="region" aria-label="privacy">
+      <div style="text-align:left">
+        <strong style="font-size:13px;letter-spacing:.04em;color:var(--muted)">Privacy</strong>
+        <p class="tiny" style="margin-top:6px">This preview page uses no trackers or analytics. If you join the waitlist, your email is stored locally in your browser and we open a pre-filled email to <code>hello@1440blackhole.com</code>. We won’t email you unless you send that message.</p>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="panel" id="about" role="region" aria-label="about">
+      <div style="text-align:left">
+        <strong style="font-size:13px;letter-spacing:.04em;color:var(--muted)">About</strong>
+        <p class="tiny" style="margin-top:6px">1440BLACKHOLE is a calm, minimal tool that helps you notice where minutes vanish — arguments, doomscrolling, and everyday friction. Our goal is awareness, not judgment.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:20px;font-size:14px;color:var(--muted)">Coming soon — reclaim your remaining minutes.</p>
+
+    <!-- Settings modal -->
+    <dialog class="modal" id="settingsModal">
+      <form method="dialog" class="sheet" id="settingsForm">
+        <h3>Daily Averages (minutes)</h3>
+        <div class="grid2">
+          <label>Sleep</label>   <input type="number" id="s_sleep"   min="0" max="1440" step="5" />
+          <label>Commute</label> <input type="number" id="s_commute" min="0" max="1440" step="5" />
+          <label>Food</label>    <input type="number" id="s_food"    min="0" max="1440" step="5" />
+          <label>Work</label>    <input type="number" id="s_work"    min="0" max="1440" step="5" />
+          <label>Screen</label>  <input type="number" id="s_screen"  min="0" max="1440" step="5" />
+        </div>
+        <h3 style="margin-top:14px">Add a category</h3>
+        <div class="grid2">
+          <label>Name</label><input type="text"   id="s_custom_name" placeholder="e.g., Gym, Study, Family" />
+          <label>Minutes</label><input type="number" id="s_custom_mins" min="0" max="1440" step="5" />
+        </div>
+        <div class="actions">
+          <button class="btn" value="cancel">Cancel</button>
+          <button class="btn" id="saveSettings" value="default">Save</button>
+        </div>
+      </form>
+    </dialog>
+  </main>
+
+  <footer>
+    <nav class="footnav" aria-label="Footer">
+      <a href="#notify">Notify me</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#about">About</a>
+    </nav>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    // --- Icons ---
+    if (window.lucide) { lucide.createIcons({ attrs: { stroke: 'var(--accent)', 'stroke-width': 1.75 } }); }
+
+    // --- State (minutes) ---
+    const KEY = 'bh_prefs_minutes_v2';
+    const DEFAULTS = {
+      base: { sleep:450, commute:120, food:90, work:480, screen:180 },
+      custom: [] // [{name:'Gym', mins:60}]
+    };
+    function loadState(){ try{ const v = JSON.parse(localStorage.getItem(KEY)||'null'); if(v) return v; }catch{} return JSON.parse(JSON.stringify(DEFAULTS)); }
+    function saveState(s){ try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch{} }
+    let S = loadState();
+
+    // --- Utilities ---
+    function iconFor(key,name){
+      const map = { sleep:'moon', commute:'car', food:'utensils', work:'briefcase', screen:'monitor' };
+      return map[key] || 'tag';
     }
-    try{
-      const key = '1440_waitlist';
-      const arr = JSON.parse(localStorage.getItem(key) || '[]');
-      if(!arr.includes(v)) arr.push(v);
-      localStorage.setItem(key, JSON.stringify(arr));
-    }catch{}
-    // Prefill mailto as a temporary backend-free flow
-    const subject = encodeURIComponent('Waitlist — 1440BLACKHOLE');
-    const body = encodeURIComponent('Please add me to the TestFlight waitlist.\n\nEmail: '+v+'\n\n(If you already captured this in localStorage, feel free to ignore.)');
-    window.location.href = `mailto:hello@1440blackhole.com?subject=${subject}&body=${body}`;
-    document.getElementById('note').textContent = 'Thanks! Your email draft is open — hit send to join the waitlist.';
-  });
+    function hueForPct(p){ const h = 120*p; return `hsl(${h}, 70%, 50%)`; } // 0=red,1=green
 
-  // Inline privacy modal placeholder
-  document.getElementById('privacy').addEventListener('click', (e)=>{
-    e.preventDefault(); alert('Privacy: This preview stores your email locally (in your browser) and opens a prefilled email to hello@1440blackhole.com. No analytics or trackers on this page.');
-  });
-</script>
+    // --- Renderers ---
+    function sumMinutes(){
+      let used = 0; for (const k in S.base) used += Math.max(0, Number(S.base[k]||0));
+      for (const c of (S.custom||[])) used += Math.max(0, Number(c.mins||0));
+      return used;
+    }
+    function activeTotal(){ return Math.max(0, 1440 - sumMinutes()); }
+
+    function buildRow({key, name, mins, icon}){
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.setAttribute('data-key', key);
+      row.setAttribute('title', name||key);
+      row.innerHTML = `<div class="icon"><i data-lucide="${icon}"></i></div><div class="bar"><div class="fill"></div></div><div class="mins"><span class="mval">${mins}</span>m</div>`;
+      return row;
+    }
+
+    function renderSnapshot(){
+      const wrap = document.getElementById('snapshot');
+      if(!wrap) return;
+      wrap.innerHTML = '';
+
+      // Active (unused) minutes row first
+      const activeRow = document.createElement('div');
+      activeRow.className = 'row';
+      activeRow.id = 'row-active';
+      activeRow.innerHTML = `<div class="icon"><i data-lucide="clock"></i></div><div class="bar"><div class="fill" id="activeFill"></div></div><div class="mins"><span id="activeLeft">0</span>m left / <span id="activeTotal">0</span>m</div>`;
+      wrap.appendChild(activeRow);
+
+      // Base rows
+      for (const k of Object.keys(S.base)){
+        const mins = Math.max(0, Number(S.base[k]||0));
+        wrap.appendChild(buildRow({key:k, name:k, mins, icon:iconFor(k)}));
+      }
+      // Custom rows (0 or more)
+      for (let i=0; i<(S.custom||[]).length; i++){
+        const c = S.custom[i];
+        const key = `custom_${i}`;
+        wrap.appendChild(buildRow({key, name:c.name||'Custom', mins:Math.max(0,Number(c.mins||0)), icon:iconFor('', c.name)}));
+      }
+
+      // Activate icons for any new nodes
+      if (window.lucide) lucide.createIcons({ attrs: { stroke: 'var(--accent)', 'stroke-width': 1.75 } });
+
+      // Fill widths for all rows (except active)
+      wrap.querySelectorAll('.row[data-key]').forEach(row=>{
+        const k=row.getAttribute('data-key');
+        let mins = 0;
+        if (S.base[k] != null) mins = Number(S.base[k]||0);
+        else {
+          const idx = Number(k.split('_')[1]||-1); const c=(S.custom||[])[idx];
+          mins = c? Number(c.mins||0):0;
+        }
+        const pct = Math.min(100, (Math.max(0,mins)/1440)*100);
+        row.querySelector('.fill').style.width = pct + '%';
+        row.querySelector('.mval').textContent = Math.max(0, Math.round(mins));
+      });
+    }
+
+    function renderActive(nowPassedMins){
+      const total = activeTotal();
+      const left  = Math.max(0, total - nowPassedMins);
+      const pct   = total>0 ? (left/total) : 0;
+
+      const fill = document.getElementById('activeFill');
+      if (fill){
+        const c1 = hueForPct(pct);
+        const c2 = `hsla(${120*pct},70%,50%,.6)`;
+        fill.style.background = `linear-gradient(90deg, ${c1}, ${c2})`;
+        fill.style.width = Math.max(0, Math.min(100, pct*100)) + '%';
+      }
+
+      const tEl = document.getElementById('activeTotal');
+      const lEl = document.getElementById('activeLeft');
+      if (tEl) tEl.textContent = Math.max(0, Math.round(total));
+      if (lEl) lEl.textContent = Math.max(0, Math.round(left));
+    }
+
+    // --- Live 1440 ring ---
+    const CIRCUM = 2*Math.PI*46;
+    const ring   = document.getElementById('meterRing');
+    const out    = document.getElementById('meterMins');
+
+    function tick(){
+      const now = new Date();
+      const midnight = new Date(now); midnight.setHours(0,0,0,0);
+      const passed = Math.floor((now - midnight) / 60000);
+
+      // meter ring
+      const left = Math.max(0, 1440 - passed);
+      out.textContent = left;
+      const frac = left / 1440;
+      ring.setAttribute('stroke-dasharray', CIRCUM.toFixed(0));
+      ring.setAttribute('stroke-dashoffset', ((1 - frac) * CIRCUM).toFixed(0));
+
+      // active (unused) row
+      renderActive(passed);
+    }
+
+    // --- Settings modal wiring ---
+    const modal   = document.getElementById('settingsModal');
+    const openBtn = document.getElementById('openSettings');
+    const form    = document.getElementById('settingsForm');
+
+    function populateForm(){
+      document.getElementById('s_sleep').value   = S.base.sleep;
+      document.getElementById('s_commute').value = S.base.commute;
+      document.getElementById('s_food').value    = S.base.food;
+      document.getElementById('s_work').value    = S.base.work;
+      document.getElementById('s_screen').value  = S.base.screen;
+      document.getElementById('s_custom_name').value = (S.custom[0]?.name)||'';
+      document.getElementById('s_custom_mins').value = (S.custom[0]?.mins)||'';
+    }
+
+    if (openBtn) openBtn.addEventListener('click', (e)=>{ e.preventDefault(); populateForm(); modal.showModal(); });
+    if (form) {
+      document.getElementById('saveSettings').addEventListener('click', (e)=>{
+        e.preventDefault();
+        const next = {
+          base: {
+            sleep:   Math.max(0, Number(document.getElementById('s_sleep').value   || 0)),
+            commute: Math.max(0, Number(document.getElementById('s_commute').value || 0)),
+            food:    Math.max(0, Number(document.getElementById('s_food').value    || 0)),
+            work:    Math.max(0, Number(document.getElementById('s_work').value    || 0)),
+            screen:  Math.max(0, Number(document.getElementById('s_screen').value  || 0)),
+          },
+          custom: []
+        };
+        const cname = (document.getElementById('s_custom_name').value||'').trim();
+        const cmins = Math.max(0, Number(document.getElementById('s_custom_mins').value||0));
+        if (cname && cmins>0){ next.custom.push({name:cname, mins:cmins}); }
+        S = next; saveState(S);
+        renderSnapshot();
+        const now = new Date(); const midnight = new Date(now); midnight.setHours(0,0,0,0);
+        const passed = Math.floor((now - midnight)/60000);
+        renderActive(passed);
+        modal.close();
+      });
+    }
+
+    // --- Initial render ---
+    renderSnapshot();
+    tick();
+    setInterval(tick, 1000);
+
+    // Notify (mailto + local persistence)
+    const btn=document.getElementById('notifyBtn');
+    if(btn) btn.addEventListener('click',()=>{
+      const el=document.getElementById('email');
+      const v=(el.value||'').trim();
+      if(!v||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)){
+        el.focus(); el.style.borderColor='#ff6188'; return;
+      }
+      try{
+        const key='1440_waitlist';
+        const arr=JSON.parse(localStorage.getItem(key)||'[]');
+        if(!arr.includes(v)) arr.push(v);
+        localStorage.setItem(key,JSON.stringify(arr));
+      }catch{}
+      const subject=encodeURIComponent('Waitlist — 1440BLACKHOLE');
+      const body=encodeURIComponent('Please add me to the TestFlight waitlist.\n\nEmail: '+v);
+      window.location.href=`mailto:hello@1440blackhole.com?subject=${subject}&body=${body}`;
+      const note=document.getElementById('note'); if(note) note.textContent='Thanks! Your email draft is open — hit send to join the waitlist.';
+    });
+
+    // Safety: rebuild on DOM ready too
+    window.addEventListener('DOMContentLoaded', ()=>{ renderSnapshot(); tick(); });
+  </script>
 </body>
 </html>
